@@ -1,14 +1,22 @@
-
 /*
  * Copyright (C) Alexandre Kalendarev
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR 
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER 
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE 
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
  */
-
 
 #include <ngx_config.h>
 #include <ngx_core.h>
 #include <ngx_http.h>
 #include <nginx.h>
-
 
 typedef struct {
     ngx_int_t state;
@@ -37,7 +45,6 @@ static ngx_http_module_t  ngx_http_isaccept_filter_module_ctx = {
     NULL								   /* merge location configration */
 };
 
-
 ngx_module_t  ngx_http_isaccept_filter_module = {
     NGX_MODULE_V1,
     &ngx_http_isaccept_filter_module_ctx,         /* module context */
@@ -55,16 +62,11 @@ ngx_module_t  ngx_http_isaccept_filter_module = {
 
 static ngx_str_t  ngx_http_isaccept = ngx_string("isaccept");
 
-
 static ngx_int_t
 ngx_http_isaccept_header_filter(ngx_http_request_t *r)
 {
 	ngx_http_isaccept_ctx_t *ctx;
 	
-	ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "isaccept header filter *****");
-
-
     ctx = ngx_pcalloc(r->pool, sizeof(ngx_http_isaccept_ctx_t));
     if (ctx == NULL) {
         return NGX_ERROR;
@@ -99,25 +101,19 @@ ngx_http_isaccept_header_filter(ngx_http_request_t *r)
 		p = header[i].value.data;
 		unsigned int j;
 		for ( j = 0; j< header[i].value.len-6; j++) { 
-			if (*(p+j) == 'i' && *(p+j+2) == 'a' && *(p+j+4) == 'e' && *(p+j+6) == '*') { // image/*
+			if (*(p+j) == 'i' && *(p+j+2) == 'a' && *(p+j+4) == 'e' && *(p+j+6) == '*') { 
 					ctx->state = 1;
 					break;
 			}
 		}
 	}
-	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "header %s: %s",header[i].key.data,header[i].value.data);
   }	
-	
-	
-
     return ngx_http_next_header_filter(r);
 }
 
 static ngx_int_t
 ngx_http_isaccept_filter_init(ngx_conf_t *cf)
 {
-	//ngx_log_error(NGX_LOG_ALERT, cf->log, 0, "***** conf isaccept");
     ngx_http_next_header_filter = ngx_http_top_header_filter;
     ngx_http_top_header_filter = ngx_http_isaccept_header_filter;
 	
@@ -159,8 +155,7 @@ ngx_http_isaccept_handler_variable(ngx_http_request_t *r,
     if (buff == NULL) {
         return NGX_ERROR;
     }
-	
-	
+
 	v->len = 1;
 	ngx_sprintf(buff, "%i", ctx->state); 
 	v->data = buff;
