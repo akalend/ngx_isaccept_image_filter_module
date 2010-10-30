@@ -1,0 +1,52 @@
+This module is filter for nginx. The filter set the isaccept var to "1" if  value of Accept header consist the "imege/*" string:
+The context var $isaccept is server.
+
+Example part config:
+
+http {
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for" accept=$isaccept ';
+
+    access_log  logs/access.log  main;
+    error_log  logs/error.log  debug;
+....
+}
+
+The some Headers:
+
+2010/10/30 03:02:53 [debug] 11115#0: *6 http process request header line
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Host: localhost"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "User-Agent: Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; ru; rv:1.9.0.19) Gecko/2010031218 Firefox/3.0.19"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Accept: image/png,image/*;q=0.8,*/*;q=0.5"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Accept-Language: ru,en-us;q=0.7,en;q=0.3"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Accept-Encoding: gzip,deflate"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Accept-Charset: windows-1251,utf-8;q=0.7,*;q=0.7"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Keep-Alive: 300"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Connection: keep-alive"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header: "Cookie: MANTIS_VIEW_ALL_COOKIE=1"
+2010/10/30 03:02:53 [debug] 11115#0: *6 http header done
+
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header: "Host: localhost"
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header: "Accept: text/html, text/plain, text/css, text/sgml, */*;q=0.01"
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header: "Accept-Encoding: gzip, compress, bzip2"
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header: "Accept-Language: en"
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header: "User-Agent: Lynx/2.8.6rel.5 libwww-FM/2.14 SSL-MM/1.4.1 OpenSSL/0.9.8m"
+2010/10/30 03:03:36 [debug] 11115#0: *7 http header done
+
+2010/10/30 03:05:19 [debug] 11115#0: *10 http process request header line
+2010/10/30 03:05:19 [debug] 11115#0: *10 http header: "Host: localhost"
+2010/10/30 03:05:19 [debug] 11115#0: *10 http header: "User-Agent: HTTP%20Client0.9.1 CFNetwork/438.14 Darwin/9.8.0 (i386) (MacBookPro2%2C1)"
+2010/10/30 03:05:19 [debug] 11115#0: *10 http header: "Accept: image/jpg,image/*"
+2010/10/30 03:05:19 [debug] 11115#0: *10 http header: "Connection: close"
+2010/10/30 03:05:19 [debug] 11115#0: *10 http header done
+
+Example from log:
+
+127.0.0.1 - - [30/Oct/2010:02:59:22 +0400] "GET / HTTP/1.1" 200 151 "-" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/534.7 (KHTML, like Gecko) Chrome/7.0.517.41 Safari/534.7" "-" accept=0 
+127.0.0.1 - - [30/Oct/2010:03:00:58 +0400] "GET / HTTP/1.1" 200 151 "-" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; ru-ru) AppleWebKit/530.19.2 (KHTML, like Gecko) Version/4.0.2 Safari/530.19" "-" accept=0 
+127.0.0.1 - - [30/Oct/2010:03:02:53 +0400] "GET / HTTP/1.1" 200 151 "-" "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; ru; rv:1.9.0.19) Gecko/2010031218 Firefox/3.0.19" "-" accept=0 
+
+127.0.0.1 - - [30/Oct/2010:03:03:36 +0400] "GET / HTTP/1.0" 200 151 "-" "Lynx/2.8.6rel.5 libwww-FM/2.14 SSL-MM/1.4.1 OpenSSL/0.9.8m" "-" accept=0 
+127.0.0.1 - - [30/Oct/2010:03:04:19 +0400] "GET / HTTP/1.1" 200 151 "-" "HTTP%20Client0.9.1 CFNetwork/438.14 Darwin/9.8.0 (i386) (MacBookPro2%2C1)" "-" accept=1 
