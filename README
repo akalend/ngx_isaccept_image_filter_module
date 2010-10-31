@@ -1,4 +1,4 @@
-This module is filter for nginx. The filter set the isaccept var to "1" if  value of Accept header consist the "imege/*" string:
+This module is filter for nginx. The filter set the isaccept var to "1" if  value of Accept header consist the "image/*" string:
 The context var $isaccept is server.
 
 Example part config:

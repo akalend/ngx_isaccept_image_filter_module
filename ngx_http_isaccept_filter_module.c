@@ -97,12 +97,12 @@ ngx_http_isaccept_header_filter(ngx_http_request_t *r)
 	}
 
 	u_char * p;
-	if (header[i].key.len == 6 && ngx_strncmp("Accept", header[i].value.data, 6)) {
+	if (header[i].key.len == 6 && !ngx_strcmp("Accept", header[i].key.data)) {
 		p = header[i].value.data;
 		unsigned int j;
-		for ( j = 0; j< header[i].value.len-6; j++) { 
+		for (j = 0; j< header[i].value.len-6; j++) { 
 			u_char *m = p+j;
-			if (m[0] == 'i' && m[2] == 'a' && m[4] == 'e' && m[6] == '*') { 
+			if (!ngx_strncmp(m,"image/*",7)) { 
 					ctx->state = 1;
 					break;
 			}
