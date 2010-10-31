@@ -1,5 +1,5 @@
 /*
- * Copyright (C) Alexandre Kalendarev
+ * Copyright (C) Alexandre Kalendarev 
  * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
@@ -101,7 +101,8 @@ ngx_http_isaccept_header_filter(ngx_http_request_t *r)
 		p = header[i].value.data;
 		unsigned int j;
 		for ( j = 0; j< header[i].value.len-6; j++) { 
-			if (*(p+j) == 'i' && *(p+j+2) == 'a' && *(p+j+4) == 'e' && *(p+j+6) == '*') { 
+			u_char *m = p+j;
+			if (m[0] == 'i' && m[2] == 'a' && m[4] == 'e' && m[6] == '*') { 
 					ctx->state = 1;
 					break;
 			}
